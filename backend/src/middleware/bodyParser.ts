@@ -12,4 +12,4 @@ export function bodyFallback(req: Request, _res: Response, next: NextFunction): 
     req.body = null;
   }
   next();
-}
+} 
