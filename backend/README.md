@@ -1,7 +1,5 @@
 # Webhook Tester Project README Files
 
-This document contains separate README content for both the backend (Express.js) and frontend (Next.js) parts of the Webhook Tester project.
-
 ---
 
 ## Backend README (Express.js)
