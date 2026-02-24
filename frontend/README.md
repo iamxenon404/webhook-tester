@@ -51,3 +51,37 @@ MIT License
 
 ```
 ```
+
+
+Project Structure
+
+```
+webhook-tester/
+│
+├── backend/                  # Express backend
+│   ├── src/
+│   │   ├── app.js            # Core Express setup
+│   │   ├── routes/
+│   │   │   ├── create.js
+│   │   │   ├── hook.js
+│   │   │   └── logs.js
+│   │   ├── utils/
+│   │   │   ├── idGen.js
+│   │   │   └── storage.js
+│   │   └── middleware/
+│   │       └── bodyParser.js
+│   ├── storage/              # Optional file-based storage
+│   │   └── data.json
+│   └── server.js             # Entry point
+│
+├── frontend/                 # Next.js frontend
+│   ├── pages/
+│   │   ├── index.js          # Dashboard home
+│   │   ├── logs/[id].js      # Logs view page
+│   │   └── api/              # Next.js API routes if needed
+│   ├── components/           # Reusable UI components
+│   ├── public/
+│   └── styles/
+│
+├── package.json              # Optionally root-level scripts
+└── README.md
