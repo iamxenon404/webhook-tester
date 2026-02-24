@@ -4,7 +4,7 @@ import { endpointExists, appendLog } from '../utils/storage';
 const router = Router();
 
 router.all('/:id', (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   if (!endpointExists(id)) {
     res.status(404).json({ error: `No webhook endpoint found for id: ${id}` });
