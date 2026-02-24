@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { generateId } from '../utils/idGen';
+// import { generateId } from '../utils/idGen';
 import { createEndpoint } from '../utils/storage';
+import { generateId } from '../utils/idgen';
 
 const router = Router();
 
