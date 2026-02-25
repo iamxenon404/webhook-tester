@@ -68,26 +68,28 @@ webhook-tester/
 │
 ├── backend/                  # Express backend
 │   ├── src/
-│   │   ├── app.js            # Core Express setup
+│   │   ├── app.ts            # Core Express setup
 │   │   ├── routes/
-│   │   │   ├── create.js
-│   │   │   ├── hook.js
-│   │   │   └── logs.js
+│   │   │   ├── create.ts
+│   │   │   ├── hook.ts
+│   │   │   └── logs.ts
 │   │   ├── utils/
-│   │   │   ├── idGen.js
-│   │   │   └── storage.js
+│   │   │   ├── idGen.ts
+│   │   │   └── storage.ts
 │   │   └── middleware/
-│   │       └── bodyParser.js
-│   ├── storage/              # Optional file-based storage
-│   │   └── data.json
-│   └── server.js             # Entry point
+│   │       └── bodyParser.ts
+│   └── server.ts             # Entry point
 │
 ├── frontend/                 # Next.js frontend
-│   ├── pages/
-│   │   ├── index.js          # Dashboard home
-│   │   ├── logs/[id].js      # Logs view page
-│   │   └── api/              # Next.js API routes if needed
-│   ├── components/           # Reusable UI components
+│   ├── app/
+│   │   ├── page.tsx          # Dashboard home
+│   │   └── logs/[id]/
+│   │       └── page.tsx      # Logs view page
+│   ├── components/
+│   │   ├── Dashboard.tsx
+│   │   ├── EndpointCard.tsx
+│   │   ├── LogViewer.tsx
+│   │   └── LogEntry.tsx
 │   ├── public/
 │   └── styles/
 │
@@ -171,13 +173,14 @@ webhook-tester/
 ### Install dependencies
 
 ```
-npm install express cors body-parser nanoid
+npm install express cors
+npm install --save-dev @types/express @types/cors @types/node ts-node typescript
 ```
 
 ### Run the server
 
 ```
-node backend/server.js
+npx ts-node src/server.ts
 ```
 
 Server will start on the configured port (default: 5000). Next.js frontend runs on default port 3000.
@@ -186,7 +189,7 @@ Server will start on the configured port (default: 5000). Next.js frontend runs 
 
 ## 9. Roadmap
 
-### Phase 1 (MVP)
+### Phase 1 (MVP) ✅
 
 * Create endpoint
 * Log incoming requests
@@ -207,6 +210,18 @@ Server will start on the configured port (default: 5000). Next.js frontend runs 
 * Authentication
 * Docker container support
 
+### Phase 4 — CLI Tool
+
+* Publish as an npm package (`npm install -g webhook-tester`)
+* Single command to start both backend and frontend (`webhook-tester start`)
+* Auto-generates a first endpoint on startup
+* Opens browser dashboard automatically
+* Clean terminal output showing the webhook URL ready to use
+* Optional flags:
+  * `--port` to set a custom backend port
+  * `--no-open` to skip auto-opening the browser
+  * `--endpoint` to auto-create an endpoint on start
+
 ---
 
 ## 10. Contribution Guidelines
@@ -220,7 +235,7 @@ Server will start on the configured port (default: 5000). Next.js frontend runs 
 
 ## 11. License
 
-Recommend MIT License for maximum openness.
+MIT License
 
 ---
 
