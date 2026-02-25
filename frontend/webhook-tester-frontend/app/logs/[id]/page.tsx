@@ -1,7 +1,8 @@
 'use client';
 
+import LogViewer from '@/app/component/LogViewer';
 import { use } from 'react';
-import LogViewer from '@/components/LogViewer';
+// import LogViewer from '@/components/LogViewer';
 
 interface Props {
   params: Promise<{ id: string }>;
