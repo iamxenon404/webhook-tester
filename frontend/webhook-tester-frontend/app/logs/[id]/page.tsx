@@ -1,4 +1,6 @@
-import LogViewer from '@/components/LogViewer';
+// import LogViewer from '@/components/LogViewer';
+
+import LogViewer from "@/app/component/LogViewer";
 
 interface Props {
   params: { id: string };
