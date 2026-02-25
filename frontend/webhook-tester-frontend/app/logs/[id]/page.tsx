@@ -1,11 +1,13 @@
-// import LogViewer from '@/components/LogViewer';
+'use client';
 
-import LogViewer from "@/app/component/LogViewer";
+import { use } from 'react';
+import LogViewer from '@/components/LogViewer';
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function LogsPage({ params }: Props) {
-  return <LogViewer id={params.id} />;
+  const { id } = use(params);
+  return <LogViewer id={id} />;
 }
