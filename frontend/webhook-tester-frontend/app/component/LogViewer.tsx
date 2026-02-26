@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { ArrowLeft, Activity, Terminal, Copy, Check, Zap, Wifi, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Activity, Terminal, Copy, Check, Zap, Wifi } from 'lucide-react';
 import LogEntry from './LogEntry';
 import Link from 'next/link';
 
@@ -18,24 +18,19 @@ interface LogViewerProps {
   id: string;
 }
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
 export default function LogViewer({ id }: LogViewerProps) {
   const [logs, setLogs] = useState<Log[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  const hookUrl = `http://localhost:5000/hook/${id}`;
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    document.documentElement.classList.toggle('dark');
-  };
+  const hookUrl = `${BACKEND_URL}/hook/${id}`;
 
   const fetchLogs = useCallback(async () => {
     try {
-      const res = await fetch(`http://localhost:5000/${id}`);
+      const res = await fetch(`${BACKEND_URL}/${id}`);
       if (!res.ok) throw new Error('Endpoint not found');
       const data = await res.json();
       setLogs(data.logs);
@@ -66,7 +61,6 @@ export default function LogViewer({ id }: LogViewerProps) {
   return (
     <main className="min-h-screen bg-zinc-50 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 selection:bg-indigo-500/30 font-sans transition-colors duration-700 overflow-x-hidden">
       
-      {/* ELITE NEBULA BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-indigo-500/10 dark:bg-indigo-600/5 blur-[120px] rounded-full" />
@@ -74,7 +68,6 @@ export default function LogViewer({ id }: LogViewerProps) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12">
         
-        {/* Navigation */}
         <nav className="flex items-center justify-between mb-16">
           <Link 
             href="/" 
@@ -84,24 +77,15 @@ export default function LogViewer({ id }: LogViewerProps) {
             Return_to_Nexus
           </Link>
           
-          <div className="flex items-center gap-4">
-            {/* <button 
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-zinc-200 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-zinc-600 dark:text-zinc-400"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button> */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Live_Capture</span>
-            </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Live_Capture</span>
           </div>
         </nav>
 
-        {/* Hero Branding */}
         <header className="mb-12 space-y-8">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-2xl bg-zinc-900 dark:bg-white shadow-2xl">
@@ -115,7 +99,6 @@ export default function LogViewer({ id }: LogViewerProps) {
             </div>
           </div>
 
-          {/* URL Terminal Interface */}
           <div className={`group relative bg-white dark:bg-[#050505] border transition-all duration-500 rounded-3xl p-6 overflow-hidden ${copied ? 'border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.1)]' : 'border-zinc-200 dark:border-white/10 shadow-2xl'}`}>
             <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity pointer-events-none">
               <Terminal className="w-32 h-32 text-zinc-900 dark:text-white -rotate-12 translate-x-12" />
@@ -155,7 +138,6 @@ export default function LogViewer({ id }: LogViewerProps) {
           </div>
         </header>
 
-        {/* Content Pipeline */}
         <section className="space-y-8">
           {error && (
             <div className="bg-rose-500/5 border border-rose-500/20 p-5 rounded-2xl flex items-center gap-4 text-rose-500 text-[10px] font-black uppercase tracking-widest animate-pulse">
@@ -166,8 +148,8 @@ export default function LogViewer({ id }: LogViewerProps) {
 
           {loading ? (
             <div className="py-32 flex flex-col items-center gap-6 border border-zinc-200 dark:border-white/5 rounded-[40px] bg-white dark:bg-white/[0.01]">
-                <Activity className="w-10 h-10 text-indigo-500 animate-spin" />
-                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400 dark:text-zinc-700">Synchronizing_Datastreams...</p>
+              <Activity className="w-10 h-10 text-indigo-500 animate-spin" />
+              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400 dark:text-zinc-700">Synchronizing_Datastreams...</p>
             </div>
           ) : logs.length > 0 ? (
             <div className="space-y-6">
@@ -184,7 +166,6 @@ export default function LogViewer({ id }: LogViewerProps) {
               </div>
             </div>
           ) : (
-            /* Empty Data State */
             <div className="py-40 flex flex-col items-center justify-center border-2 border-dashed border-zinc-200 dark:border-zinc-900 rounded-[40px] bg-zinc-50/50 dark:bg-white/[0.01] transition-all hover:bg-zinc-100 dark:hover:bg-white/[0.02] group">
               <div className="p-8 rounded-[32px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 shadow-2xl">
                 <Activity className="w-12 h-12 text-zinc-300 dark:text-zinc-800 group-hover:text-indigo-500 transition-colors" />
