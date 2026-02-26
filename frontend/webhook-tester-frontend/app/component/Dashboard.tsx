@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Webhook, AlertCircle, Inbox, Loader2 } from 'lucide-react';
+import { Plus, Webhook, AlertCircle, Inbox, Loader2, Terminal, ShieldCheck } from 'lucide-react';
 import EndpointCard from './EndpointCard';
 
 interface Endpoint {
@@ -22,92 +22,131 @@ export default function Dashboard() {
       const data = await res.json();
       setEndpoints((prev) => [data, ...prev]);
     } catch (err) {
-      setError('Failed to connect to backend. Is the server running?');
+      setError('Connection timeout: Backend unreachable.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen bg-[#030712] text-slate-200 selection:bg-indigo-500/30">
-      {/* Subtle Background Glow */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 blur-[120px]" />
-        <div className="absolute top-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-purple-500/10 blur-[120px]" />
-      </div>
+    <main className="min-h-screen bg-[#0a0a0c] text-slate-300 font-mono selection:bg-indigo-500/40">
+      {/* Dev Trait: Subtle Grid Background */}
+      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm1 1h38v38H1V1z' fill='%23ffffff' fill-opacity='1'/%3E%3C/svg%3E")` }} 
+      />
 
-      <div className="relative max-w-3xl mx-auto px-6 py-16 lg:py-24">
-        {/* Header Section */}
-        <header className="flex flex-col items-center text-center mb-12">
-          <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 mb-6">
-            <Webhook className="w-10 h-10 text-indigo-400" />
+      {/* Main Container */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 py-12">
+        
+        {/* Top Utility Bar */}
+        <div className="flex justify-between items-center mb-12 px-4 py-2 border-x border-t border-white/10 rounded-t-xl bg-white/5 backdrop-blur-md">
+          <div className="flex items-center gap-4">
+            <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+            </div>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">System v1.0.4</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">
-            Webhook Tester
-          </h1>
-          <p className="text-slate-400 text-lg max-w-md leading-relaxed">
-            Generate secure, unique endpoints to intercept and debug HTTP payloads in real-time.
-          </p>
-        </header>
-
-        {/* Action Bar */}
-        <div className="mb-10">
-          <button
-            onClick={handleCreate}
-            disabled={loading}
-            className="group relative w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-white transition-all duration-200 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] active:scale-[0.98]"
-          >
-            {loading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
-            )}
-            <span className="tracking-wide">
-              {loading ? 'Generating Endpoint...' : 'Create New Endpoint'}
-            </span>
-          </button>
+          <div className="flex items-center gap-2 text-[10px] text-emerald-500 uppercase tracking-widest animate-pulse">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+            Server: Online
+          </div>
         </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-4 mb-8 animate-in fade-in slide-in-from-top-2">
-            <AlertCircle className="w-5 h-5 shrink-0" />
-            <p className="text-sm font-medium">{error}</p>
-          </div>
-        )}
-
-        {/* Content Area */}
-        <section>
-          {endpoints.length > 0 ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between px-2">
-                <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">
-                  Active Endpoints ({endpoints.length})
-                </h2>
-                <div className="h-px flex-1 bg-slate-800 ml-4"></div>
+        {/* Content Border Box */}
+        <div className="border border-white/10 rounded-b-xl bg-black/40 backdrop-blur-sm p-8 shadow-2xl">
+          
+          {/* Header */}
+          <header className="mb-12 border-b border-white/5 pb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-indigo-500/10 rounded border border-indigo-500/20">
+                <Terminal className="w-6 h-6 text-indigo-400" />
               </div>
-              <div className="grid gap-4 animate-in fade-in duration-500">
-                {endpoints.map((ep) => (
-                  <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
-                ))}
-              </div>
+              <h1 className="text-2xl font-bold tracking-tighter text-white">
+                REQUEST_INSPECTOR_
+              </h1>
             </div>
-          ) : (
-            /* Empty State */
-            !loading && (
-              <div className="flex flex-col items-center justify-center py-20 px-6 rounded-3xl border border-dashed border-slate-800 bg-slate-900/20 backdrop-blur-sm transition-all duration-300">
-                <div className="p-4 rounded-full bg-slate-900 mb-4 border border-slate-800">
-                  <Inbox className="w-8 h-8 text-slate-600" />
-                </div>
-                <h3 className="text-slate-300 font-medium mb-1">No endpoints active</h3>
-                <p className="text-slate-500 text-sm text-center">
-                  Your generated webhook URLs will appear here for inspection.
-                </p>
+            <p className="text-slate-500 text-sm leading-relaxed max-w-xl">
+              Initialize a dynamic hook instance to capture, parse, and debug inbound HTTP transmissions in an isolated sandbox environment.
+            </p>
+          </header>
+
+          {/* Action Area */}
+          <section className="space-y-8">
+            <button
+              onClick={handleCreate}
+              disabled={loading}
+              className="group relative w-full overflow-hidden rounded-md border border-indigo-500/50 bg-indigo-500/10 px-6 py-4 transition-all hover:bg-indigo-500/20 active:scale-[0.99]"
+            >
+              {/* Button Inner Effect */}
+              <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              
+              <div className="flex items-center justify-center gap-3">
+                {loading ? <Loader2 className="w-5 h-5 animate-spin text-indigo-400" /> : <Plus className="w-5 h-5 text-indigo-400" />}
+                <span className="text-sm font-bold tracking-[0.2em] text-indigo-100 uppercase">
+                  {loading ? 'Executing...' : 'Deploy New Endpoint'}
+                </span>
               </div>
-            )
-          )}
-        </section>
+            </button>
+
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center gap-3 border border-red-500/20 bg-red-500/5 p-4 rounded text-red-400 text-xs uppercase tracking-wider">
+                <AlertCircle className="w-4 h-4" />
+                {error}
+              </div>
+            )}
+
+            {/* Endpoints List */}
+            {endpoints.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-slate-600 font-bold">
+                  <span>Active_Nodes</span>
+                  <div className="h-[1px] flex-1 bg-white/5" />
+                  <span>{endpoints.length}</span>
+                </div>
+                <div className="grid gap-3">
+                  {endpoints.map((ep) => (
+                    <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* Empty State: Dev Style */
+              !loading && (
+                <div className="relative overflow-hidden group py-16 px-6 rounded border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center text-center">
+                  <div className="absolute inset-0 bg-scanline pointer-events-none opacity-10" />
+                  <Inbox className="w-10 h-10 text-slate-700 mb-4 group-hover:text-indigo-500/50 transition-colors" />
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-600 mb-1">Waiting for user input...</p>
+                  <p className="text-[10px] text-slate-700 font-mono">Run "Deploy New Endpoint" to begin</p>
+                </div>
+              )
+            )}
+          </section>
+        </div>
+
+        {/* Footer Trait */}
+        <div className="mt-6 flex justify-between items-center px-4 text-[10px] text-slate-600 uppercase tracking-widest">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-3 h-3" />
+            Secure Tunneling Active
+          </div>
+          <div>Localhost:5000</div>
+        </div>
       </div>
+
+      <style jsx>{`
+        .bg-scanline {
+          background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.5) 51%,
+            transparent 51%
+          );
+          background-size: 100% 4px;
+        }
+      `}</style>
     </main>
   );
 }
