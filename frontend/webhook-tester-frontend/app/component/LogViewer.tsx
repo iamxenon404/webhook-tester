@@ -46,10 +46,14 @@ export default function LogViewer({ id }: LogViewerProps) {
     return () => clearInterval(interval);
   }, [fetchLogs]);
 
-  const copyUrl = () => {
-    navigator.clipboard.writeText(hookUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(hookUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   return (
@@ -65,7 +69,7 @@ export default function LogViewer({ id }: LogViewerProps) {
         <nav className="flex items-center justify-between mb-12">
           <Link 
             href="/" 
-            className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-white transition-all hover:-translate-x-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Return to Nexus
@@ -80,43 +84,64 @@ export default function LogViewer({ id }: LogViewerProps) {
         </nav>
 
         {/* Hero Section */}
-        <header className="mb-10 space-y-4">
+        <header className="mb-10 space-y-6">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
               <Zap className="w-6 h-6 text-indigo-400" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">Inspector Node</h1>
-              <p className="text-slate-500 font-mono text-xs">{id}</p>
+              <p className="text-slate-500 font-mono text-xs tracking-wider">{id}</p>
             </div>
           </div>
 
           {/* Webhook URL Terminal Card */}
-          <div className="group relative bg-[#0A0A0A] border border-white/10 rounded-xl p-4 overflow-hidden">
-             <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
-               <Terminal className="w-12 h-12 text-white -rotate-12 translate-x-4 translate-y-2" />
-             </div>
-             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Listener Gateway</p>
-             <div className="flex items-center justify-between gap-4">
-                <code className="text-sm font-mono text-indigo-300 break-all bg-black/40 px-3 py-2 rounded border border-white/5 flex-1">
-                  {hookUrl}
-                </code>
+          <div className={`group relative bg-[#0A0A0A] border rounded-xl p-5 overflow-hidden transition-all duration-500 ${copied ? 'border-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.1)]' : 'border-white/10'}`}>
+            {/* Background Icon Decor */}
+            <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-10 transition-opacity pointer-events-none">
+              <Terminal className="w-24 h-24 text-white -rotate-12 translate-x-8 translate-y-4" />
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Listener Gateway</p>
+                
+                {/* Success Message Label */}
+                <div className={`flex items-center gap-1.5 transition-all duration-300 ${copied ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">URL Copied to clipboard</span>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 group/code overflow-hidden rounded-lg">
+                  <code className="block w-full text-sm font-mono text-indigo-300 bg-black/40 px-4 py-3 border border-white/5 truncate">
+                    {hookUrl}
+                  </code>
+                  {/* Glowing line effect on hover */}
+                  <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-indigo-500 transition-all duration-500 group-hover/code:w-full" />
+                </div>
+
                 <button 
                   onClick={copyUrl}
-                  className={`shrink-0 p-2.5 rounded-lg border transition-all ${
-                    copied ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-white/10 hover:bg-white/10 text-slate-400'
+                  className={`shrink-0 flex items-center gap-2 px-5 py-3 rounded-lg border font-bold text-[10px] uppercase tracking-widest transition-all active:scale-95 ${
+                    copied 
+                    ? 'bg-emerald-500 border-emerald-400 text-white' 
+                    : 'bg-white border-transparent text-black hover:bg-slate-200'
                   }`}
                 >
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? 'Done' : 'Copy'}
                 </button>
-             </div>
+              </div>
+            </div>
           </div>
         </header>
 
         {/* Content Section */}
         <section className="space-y-6">
           {error && (
-            <div className="bg-rose-500/5 border border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-xs uppercase tracking-wider">
+            <div className="bg-rose-500/5 border border-rose-500/20 p-4 rounded-xl flex items-center gap-3 text-rose-400 text-[10px] font-bold uppercase tracking-wider animate-in fade-in zoom-in-95">
               <Wifi className="w-4 h-4" />
               {error}
             </div>
@@ -131,11 +156,11 @@ export default function LogViewer({ id }: LogViewerProps) {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] whitespace-nowrap">
-                  Capture History <span className="text-white ml-2">({logs.length})</span>
+                  Capture History <span className="text-white ml-2 font-mono">[{logs.length}]</span>
                 </h2>
                 <div className="h-px w-full bg-white/5" />
               </div>
-              <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {[...logs].reverse().map((log, i) => (
                   <LogEntry key={i} {...log} />
                 ))}
@@ -143,12 +168,12 @@ export default function LogViewer({ id }: LogViewerProps) {
             </div>
           ) : (
             /* Empty State */
-            <div className="py-32 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-3xl bg-white/[0.01] transition-all">
-              <div className="p-5 rounded-full bg-white/5 border border-white/10 mb-6">
-                <Activity className="w-10 h-10 text-slate-700" />
+            <div className="py-32 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-3xl bg-white/[0.01] transition-all hover:bg-white/[0.02] group">
+              <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-6 group-hover:scale-110 transition-transform duration-500">
+                <Activity className="w-10 h-10 text-slate-700 group-hover:text-indigo-500/50 transition-colors" />
               </div>
               <h3 className="text-slate-300 font-medium tracking-tight">Waiting for inbound data...</h3>
-              <p className="text-xs text-slate-500 mt-2 font-mono">Status: ACTIVE_LISTENER_IDLE</p>
+              <p className="text-[10px] text-slate-600 mt-2 font-mono uppercase tracking-widest">Status: Node_Idle</p>
             </div>
           )}
         </section>
