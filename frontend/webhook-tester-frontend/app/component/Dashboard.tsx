@@ -37,7 +37,7 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-200 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 selection:bg-indigo-500/30 font-sans transition-colors duration-700 overflow-x-hidden">
+    <main className="min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 selection:bg-indigo-500/30 font-sans transition-colors duration-700 overflow-x-hidden">
       
       {/* ELITE BACKGROUND UI */}
       <div className="fixed inset-0 z-0 pointer-events-none">
