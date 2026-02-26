@@ -1,14 +1,16 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "xenlog404-backend",
+  "version": "1.404.0",
+  "description": "Xenlog404 backend — webhook testing and request inspection",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "XENON-PROJECTS",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
