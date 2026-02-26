@@ -8,7 +8,15 @@ import logsRouter from './routes/logs';
 const app: Application = express();
 
 // CORS
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:3000'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true,
+}));
 
 // Body parsers
 app.use(jsonParser);
