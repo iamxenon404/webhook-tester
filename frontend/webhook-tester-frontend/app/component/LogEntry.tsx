@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Clock, Globe, Hash, Braces, ListFilter } from 'lucide-react';
+import { 
+  ChevronRight, 
+  Clock, 
+  Globe, 
+  Hash, 
+  Braces, 
+  ListFilter, 
+  FileCode, 
+  AlignLeft 
+} from 'lucide-react';
 
 interface LogEntryProps {
   method: string;
@@ -22,6 +31,7 @@ const methodStyles: Record<string, { bg: string; text: string; border: string }>
 
 export default function LogEntry({ method, headers, body, query, timestamp, ip }: LogEntryProps) {
   const [expanded, setExpanded] = useState(false);
+  const [payloadStyle, setPayloadStyle] = useState<'pretty' | 'minified'>('pretty');
 
   const style = methodStyles[method] ?? { bg: 'bg-zinc-500/10', text: 'text-zinc-500', border: 'border-zinc-500/20' };
   const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
@@ -98,14 +108,60 @@ export default function LogEntry({ method, headers, body, query, timestamp, ip }
           {/* Main Content Area */}
           <div className="lg:col-span-8 bg-zinc-50 dark:bg-[#0C0C0C] p-6 space-y-8">
             <section>
-              <div className="flex items-center gap-2 text-[9px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.3em] mb-4">
-                <Braces className="w-3 h-3 text-indigo-500" />
-                Raw_Payload
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-[9px] font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.3em]">
+                  <Braces className="w-3 h-3 text-indigo-500" />
+                  Raw_Payload
+                </div>
+
+                {/* Style Toggle Interface */}
+                <div className="flex bg-zinc-100 dark:bg-white/5 p-1 rounded-xl border border-zinc-200 dark:border-white/5 shadow-inner">
+                  <button
+                    onClick={() => setPayloadStyle('pretty')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all ${
+                      payloadStyle === 'pretty'
+                        ? 'bg-white dark:bg-zinc-800 text-indigo-500 shadow-sm'
+                        : 'text-zinc-400 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-300'
+                    }`}
+                  >
+                    <FileCode className="w-3 h-3" />
+                    Pretty
+                  </button>
+                  <button
+                    onClick={() => setPayloadStyle('minified')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all ${
+                      payloadStyle === 'minified'
+                        ? 'bg-white dark:bg-zinc-800 text-indigo-500 shadow-sm'
+                        : 'text-zinc-400 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-300'
+                    }`}
+                  >
+                    <AlignLeft className="w-3 h-3" />
+                    Minified
+                  </button>
+                </div>
               </div>
+
               <div className="relative group/payload">
-                <pre className="p-5 rounded-2xl bg-zinc-900 dark:bg-black text-[12px] font-mono leading-relaxed overflow-x-auto border border-zinc-800 dark:border-white/5 shadow-2xl">
-                  <code className="text-emerald-500 dark:text-emerald-400">
-                    {body ? JSON.stringify(body, null, 2) : '// VOID_BODY'}
+                {/* Style Indicator Label */}
+                <div className="absolute top-3 right-4 z-10 opacity-0 group-hover/payload:opacity-100 transition-opacity">
+                  <span className="text-[8px] font-mono font-black text-zinc-500 dark:text-zinc-700 uppercase tracking-widest bg-zinc-800 dark:bg-white/5 px-2 py-1 rounded">
+                    {payloadStyle === 'pretty' ? 'Parsing_Active' : 'Stream_Compact'}
+                  </span>
+                </div>
+
+                <pre className={`p-5 rounded-2xl border transition-all duration-500 overflow-x-auto shadow-2xl ${
+                  payloadStyle === 'pretty'
+                    ? 'bg-zinc-900 dark:bg-black border-zinc-800 dark:border-white/5 text-[12px] leading-relaxed'
+                    : 'bg-zinc-950 dark:bg-[#050505] border-indigo-500/20 text-[11px] leading-tight font-light'
+                }`}>
+                  <code className={payloadStyle === 'pretty' ? 'text-emerald-500 dark:text-emerald-400' : 'text-indigo-400/80 dark:text-indigo-300/70'}>
+                    {body ? (
+                      payloadStyle === 'pretty' 
+                        ? JSON.stringify(body, null, 2) 
+                        : JSON.stringify(body)
+                    ) : (
+                      '// VOID_BODY'
+                    )}
                   </code>
                 </pre>
               </div>
