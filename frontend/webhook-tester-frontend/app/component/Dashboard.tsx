@@ -64,12 +64,12 @@ export default function Dashboard() {
           </div>
           
           <div className="flex items-center gap-4">
-             <button 
+             {/* <button 
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-zinc-200 dark:bg-white/5 border border-zinc-300 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:text-indigo-500 transition-all"
              >
                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-             </button>
+             </button> */}
              <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                 System_Online
