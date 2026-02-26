@@ -81,19 +81,18 @@ webhook-tester/
 │   └── server.ts             # Entry point
 │
 ├── frontend/                 # Next.js frontend
-│   ├── app/
-│   │   ├── page.tsx          # Dashboard home
-│   │   └── logs/[id]/
-│   │       └── page.tsx      # Logs view page
-│   ├── components/
-│   │   ├── Dashboard.tsx
-│   │   ├── EndpointCard.tsx
-│   │   ├── LogViewer.tsx
-│   │   └── LogEntry.tsx
-│   ├── public/
-│   └── styles/
+│   └── webhook-tester-frontend/
+│       ├── app/
+│       │   ├── page.tsx          # Dashboard home
+│       │   └── logs/[id]/
+│       │       └── page.tsx      # Logs view page
+│       └── components/
+│           ├── Dashboard.tsx
+│           ├── EndpointCard.tsx
+│           ├── LogViewer.tsx
+│           └── LogEntry.tsx
 │
-├── package.json              # Optionally root-level scripts
+├── package.json              # Root scripts to run both servers
 └── README.md
 ```
 
@@ -170,24 +169,62 @@ webhook-tester/
 
 ## 8. Setup Instructions
 
-### Install dependencies
+### 1. Clone the repository
 
-```
-npm install express cors
-npm install --save-dev @types/express @types/cors @types/node ts-node typescript
-```
-
-### Run the server
-
-```
-npx ts-node src/server.ts
+```bash
+git clone https://github.com/your-username/webhook-tester.git
+cd webhook-tester
 ```
 
-Server will start on the configured port (default: 5000). Next.js frontend runs on default port 3000.
+### 2. Install all dependencies
+
+```bash
+npm run install:all
+```
+
+This installs dependencies for the root, backend, and frontend in one command.
+
+### 3. Start both servers
+
+```bash
+npm run dev
+```
+
+This starts both servers concurrently — no need to navigate into separate folders:
+- Backend running at `http://localhost:5000`
+- Frontend running at `http://localhost:3000`
 
 ---
 
-## 9. Roadmap
+## 9. How to Use
+
+### Step 1 — Open the dashboard
+Go to `http://localhost:3000` in your browser.
+
+### Step 2 — Create a webhook endpoint
+Click **"+ Create New Endpoint"**. You'll get back a unique URL like:
+```
+http://localhost:5000/hook/fa0b4c
+```
+
+### Step 3 — Send requests to your endpoint
+Point any service (Stripe, GitHub, Discord, etc.) at your webhook URL, or test it manually:
+```bash
+curl -X POST http://localhost:5000/hook/fa0b4c \
+  -H "Content-Type: application/json" \
+  -d '{"event": "payment.success", "amount": 100}'
+```
+
+### Step 4 — Inspect the logs
+Click **"View Logs"** on your endpoint card to see all captured requests in real time — including method, headers, body, query params, timestamp, and IP address.
+
+---
+
+> **Note:** When running locally, `localhost:5000` is only accessible on your machine. To receive webhooks from external services like Stripe or GitHub, either deploy the backend publicly or use a tunneling tool like [ngrok](https://ngrok.com) to expose your local server.
+
+---
+
+## 10. Roadmap
 
 ### Phase 1 (MVP) ✅
 
@@ -224,7 +261,7 @@ Server will start on the configured port (default: 5000). Next.js frontend runs 
 
 ---
 
-## 10. Contribution Guidelines
+## 11. Contribution Guidelines
 
 * Fork the repository
 * Use feature branches
@@ -233,7 +270,7 @@ Server will start on the configured port (default: 5000). Next.js frontend runs 
 
 ---
 
-## 11. License
+## 12. License
 
 MIT License
 
