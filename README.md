@@ -1,12 +1,14 @@
-# Webhook Tester / Request Inspector
+# Xenlog404
 
-A complete project specification and structure overview for building an open-source Express.js Webhook Testing tool with a Next.js frontend.
+> Catch every request. Miss nothing.
+
+A self-hostable webhook testing and request inspection tool. Generate unique endpoints, fire requests at them, and inspect everything in real time — method, headers, body, query params, IP, and timestamp.
 
 ---
 
 ## 1. Overview
 
-The **Webhook Tester** is a self-hostable API tool that allows developers to generate unique webhook endpoints and inspect incoming HTTP requests. It captures data such as method, headers, body, timestamp, and query parameters. The frontend dashboard is built with Next.js for viewing logs in real-time. This is useful for anyone working with webhooks or debugging API requests.
+**Xenlog404** is an open-source tool that allows developers to generate unique webhook endpoints and inspect incoming HTTP requests in real time. Built with an Express.js backend and a Next.js frontend, it's useful for anyone working with webhooks or debugging API integrations.
 
 ---
 
@@ -53,7 +55,6 @@ The **Webhook Tester** is a self-hostable API tool that allows developers to gen
 * File or database storage
 * Log expiration (auto-clean)
 * Configurable responses for webhook endpoints
-* Next.js frontend dashboard to view logs visually
 * WebSockets for real-time request monitoring
 * Shareable public bins
 * Authentication for private logs
@@ -64,7 +65,7 @@ The **Webhook Tester** is a self-hostable API tool that allows developers to gen
 ## 5. Project Structure
 
 ```
-webhook-tester/
+xenlog404/
 │
 ├── backend/                  # Express backend
 │   ├── src/
@@ -172,8 +173,8 @@ webhook-tester/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/webhook-tester.git
-cd webhook-tester
+git clone https://github.com/your-username/xenlog404.git
+cd xenlog404
 ```
 
 ### 2. Install all dependencies
@@ -238,19 +239,17 @@ Click **"View Logs"** on your endpoint card to see all captured requests in real
 * Persistent storage
 * Expiration logic
 * Response customization
-* Next.js frontend UI
 
 ### Phase 3
 
-* Full Next.js dashboard
 * WebSockets live updates
 * Authentication
 * Docker container support
 
 ### Phase 4 — CLI Tool
 
-* Publish as an npm package (`npm install -g webhook-tester`)
-* Single command to start both backend and frontend (`webhook-tester start`)
+* Publish as an npm package (`npm install -g xenlog404`)
+* Single command to start both servers (`xenlog404 start`)
 * Auto-generates a first endpoint on startup
 * Opens browser dashboard automatically
 * Clean terminal output showing the webhook URL ready to use
@@ -276,4 +275,4 @@ MIT License
 
 ---
 
-This document serves as the full functional and structural reference for the Webhook Tester project with Express backend and Next.js frontend.
+Built by [XENON-PROJECTS](https://github.com/your-username)
