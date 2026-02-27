@@ -178,4 +178,4 @@ export default function LogViewer({ id }: LogViewerProps) {
       </div>
     </main>
   );
-}
+} 
