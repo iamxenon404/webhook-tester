@@ -1,5 +1,4 @@
 import { Router, Request, Response } from 'express';
-// import { generateId } from '../utils/idGen';
 import { createEndpoint } from '../utils/storage';
 import { generateId } from '../utils/idgen';
 
@@ -9,7 +8,8 @@ router.post('/', (req: Request, res: Response) => {
   const id = generateId();
   createEndpoint(id);
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+  const baseUrl = `${protocol}://${req.get('host')}`;
 
   res.status(201).json({
     id,
